@@ -1,0 +1,14 @@
+{
+  "name": "battleships-tdd",
+  "version": "1.0.0",
+  "description": "A test project to experiment with TDD",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "dev": "webpack serve"
+  },
+  "keywords": [],
+  "author": "Noah Rijkaard",
+  "license": "ISC"
+}
