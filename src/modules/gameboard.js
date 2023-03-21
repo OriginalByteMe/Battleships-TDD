@@ -7,25 +7,25 @@
 import Ship from "./ship";
 
 class Gameboard {
-	constructor(player1, player2, sizeX, sizeY) {
-		this.player1 = player1;
-		this.player2 = player2;
-		this.player1Score = 0;
-		this.player2Score = 0;
-		this.player1Ships = [];
-		this.player2Ships = [];
-		this.player1Hit = [];
-		this.player2Hit = [];
-		this.player1Miss = [];
-		this.player2Miss = [];
-		this.player1Board = generateBoard(sizeX, sizeY);
-		this.player2Board = generateBoard(sizeX, sizeY);
+	constructor(player, computer, sizeX, sizeY) {
+		this.player = player;
+		this.computer = computer;
+		this.playerScore = 0;
+		this.computerScore = 0;
+		this.playerShips = [];
+		this.computerShips = [];
+		this.playerHit = [];
+		this.computerHit = [];
+		this.playerMiss = [];
+		this.computerMiss = [];
+		this.playerBoard = generateBoard(sizeX, sizeY);
+		this.computerBoard = generateBoard(sizeX, sizeY);
 	}
 
 	placeShip(player, orientation, length, coords) {
 		const {row, col} = {row: coords[0], col: coords[1]};
-		const {boundRow, boundCol} = {boundRow: this.player1Board.length, boundCol: this.player1Board[0].length};
-		const board = player === this.player1 ? this.player1Board : this.player2Board;
+		const {boundRow, boundCol} = {boundRow: this.playerBoard.length, boundCol: this.playerBoard[0].length};
+		const board = player === this.player ? this.playerBoard : this.computerBoard;
 		const ship = new Ship(length, orientation);
 
 		// Check for out of bounds coords
@@ -80,60 +80,50 @@ class Gameboard {
 			return false;
 		}
 
-		if (player === this.player1) {
-			this.player1Ships.push(ship);
+		if (player === this.player) {
+			this.playerShips.push(ship);
 		} else {
-			this.player2Ships.push(ship);
+			this.computerShips.push(ship);
 		}
 		return true;
 	}
 
 	recieveAttack(player, coords) {
 		const {row, col} = {row: coords[0], col: coords[1]};
-		const board = player === this.player1 ? this.player2Board : this.player1Board;
+		const board = player === this.player ? this.computerBoard : this.playerBoard;
 		const ship = board[row][col];
 		if (ship && ship.type === "Ship") {
 			if (ship.isSunk()) {
-				if (player === this.player1) {
-					this.player1Score += 1;
-					this.player1Hit.push(coords);
+				if (player === this.player) {
+					this.playerScore += 1;
+					this.playerHit.push(coords);
 				} else {
-					this.player2Score += 1;
-					this.player2Hit.push(coords);
+					this.computerScore += 1;
+					this.computerHit.push(coords);
 				}
 				return true;
 			} else {
-				if (player === this.player1) {
-					this.player1Hit.push(coords);
+				if (player === this.player) {
+					this.playerHit.push(coords);
 				} else {
-					this.player2Hit.push(coords);
+					this.computerHit.push(coords);
 				}
 				return true;
 			}
 		} else {
-			if (player === this.player1) {
-				this.player1Miss.push(coords);
+			if (player === this.player) {
+				this.playerMiss.push(coords);
 			} else {
-				this.player2Miss.push(coords);
+				this.computerMiss.push(coords);
 			}
 			return false;
 		}   
 	}
 
-	get player1Board() {
-		return this._player1Board;
-	}
-
-	set player1Board(value) {
-		this._player1Board = value;
-	}
-
-	get player2Board() {
-		return this._player2Board;
-	}
-
-	set player2Board(value) {
-		this._player2Board = value;
+	getWinner() {
+		if (this.playerScore === this.computerShips.length) return this.player;
+		if (this.computerScore === this.playerShips.length) return this.computer;
+		return false;
 	}
 }
 
