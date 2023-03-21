@@ -5,6 +5,7 @@ class Ship {
 		this.length = length;
 		this.orientation = orientation;
 		this.damage = 0;
+		this.type = "Ship";
 	}
 
 	hit() {
