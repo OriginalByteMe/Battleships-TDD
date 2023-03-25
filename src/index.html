@@ -13,13 +13,15 @@
     <header>
       <h1>Battleship Game</h1>
     </header>
-    <form action="gameboard.html" method="get" id="game-size-form">
-      <label for="player-name">Enter your name:</label>
-      <input type="string" id="player-name" name="player-name" required>
-      <label for="game-size">Enter the size of the gameboard:</label>
-      <input type="number" id="game-size" name="game-size" min="5" max="15" required>
-      <button type="submit">Start Game</button>
-    </form>
+    <div id="start-form" style="display: block;">
+      <form action="gameboard.html" method="get" id="game-size-form">
+        <label for="player-name">Enter your name:</label>
+        <input type="string" id="player-name" name="player-name" required>
+        <label for="game-size">Enter the size of the gameboard:</label>
+        <input type="number" id="game-size" name="game-size" min="5" max="15" required>
+        <button type="submit">Start Game</button>
+      </form>
+    </div>
     <div id="gameboard" style="display:none;">
       <header>
         <h1>Noah's TDD Battleship Game</h1>
@@ -27,17 +29,17 @@
       <main>
         <section class="player game-board">
           <h2>Your Board</h2>
-          <div class="player board"></div>
+          <div class="player board player-grid"></div>
           <p>Click on the board to place your ships.</p>
         </section>
         <section class="computer game-board">
           <h2>Enemy Board</h2>
-          <div class="computer board"></div>
+          <div class="computer board enemy-grid"></div>
           <p>Click on the enemy board to attack.</p>
         </section>
       </main>
       <footer>
-        <button id="start-game">Start Game</button>
+        <button id="start-game">Play Game</button>
         <button id="reset-game">Reset Game</button>
       </footer>
     </div>

@@ -18,7 +18,7 @@ class Gameboard {
 		this.computerHit = [];
 		this.playerMiss = [];
 		this.computerMiss = [];
-		this.playerBoard = generateBoard(sizeX, sizeY);
+		this._playerBoard = generateBoard(sizeX, sizeY);
 		this.computerBoard = generateBoard(sizeX, sizeY);
 		this.size = {x: sizeX, y: sizeY};
 	}
@@ -41,7 +41,7 @@ class Gameboard {
 		const ship = new Ship(length, orientation);
 
 		// Check for out of bounds coords
-		if (row > boundRow || col > boundCol || row < 0 || col < 0) {
+		if (row > boundRow || col > boundCol || row < 0 || col < 0 || player === undefined || orientation === undefined || length === undefined || coords === undefined) {
 			return false;
 		}
 
@@ -51,11 +51,13 @@ class Gameboard {
 				if (col - length < -1) {
 					return false; // Reverse order is also out of bounds
 				}
-				for (let i = col - 1; i >= col - length; i--) {
+				for (let i = col; i >= col - length; i--) {
 					if (board[row][i] && board[row][i].type === ship.type) {
 						return false; // There is a ship in the way
 					}
+					console.log("Old ship pos",board[row][i]);
 					board[row][i] = ship;
+					console.log("New ship pos",board[row][i]);
 				}
 			} else {
 				// Ship fits within bounds horizontally
@@ -88,7 +90,6 @@ class Gameboard {
 				}
 			}
 		} else {
-			console.error("Incorrect orientation: ", orientation, "\n Must be X or Y");
 			return false;
 		}
 
@@ -105,7 +106,7 @@ class Gameboard {
 		if (length < 1) length = 1;
 
 		const {row, col} = {row: coords[0], col: coords[1]};
-		const {boundRow, boundCol} = {boundRow: this.playerBoard.length, boundCol: this.playerBoard[0].length};
+		const {boundRow, boundCol} = {boundRow: this.playerBoard.length - 1, boundCol: this.playerBoard[0].length - 1};
 		const board = player === this.player ? this.playerBoard : this.computerBoard;
 		const ship = new Ship(length, orientation);
 
@@ -153,7 +154,6 @@ class Gameboard {
 				}
 			}
 		} else {
-			console.error("Incorrect orientation: ", orientation, "\n Must be X or Y");
 			return false;
 		}
 
@@ -203,6 +203,14 @@ class Gameboard {
 		if (this.playerScore === this.computerShips.length) return this.player;
 		if (this.computerScore === this.playerShips.length) return this.computer;
 		return false;
+	}
+
+	get playerBoard() {
+		return this._playerBoard;
+	}
+	
+	set playerBoard(board) {
+		this._playerBoard = board;
 	}
 }
 
