@@ -20,9 +20,21 @@ class Gameboard {
 		this.computerMiss = [];
 		this.playerBoard = generateBoard(sizeX, sizeY);
 		this.computerBoard = generateBoard(sizeX, sizeY);
+		this.size = {x: sizeX, y: sizeY};
 	}
 
+	/**
+	 * It places a ship on the board, and returns true if it was successful, and false if it was not
+	 * @param player - The player who is placing the ship. This is either the player or the computer.
+	 * @param orientation - "X" or "Y"
+	 * @param length - The length of the ship you want to place.
+	 * @param coords - The coordinates of the ship's head.
+	 * @returns A boolean value.
+	 */
 	placeShip(player, orientation, length, coords) {
+		if (length > 3) length = 3;
+		if (length < 1) length = 1;
+
 		const {row, col} = {row: coords[0], col: coords[1]};
 		const {boundRow, boundCol} = {boundRow: this.playerBoard.length, boundCol: this.playerBoard[0].length};
 		const board = player === this.player ? this.playerBoard : this.computerBoard;
@@ -88,6 +100,73 @@ class Gameboard {
 		return true;
 	}
 
+	isValidPlacement(player, orientation, length, coords) {
+		if (length > 3) length = 3;
+		if (length < 1) length = 1;
+
+		const {row, col} = {row: coords[0], col: coords[1]};
+		const {boundRow, boundCol} = {boundRow: this.playerBoard.length, boundCol: this.playerBoard[0].length};
+		const board = player === this.player ? this.playerBoard : this.computerBoard;
+		const ship = new Ship(length, orientation);
+
+		// Check for out of bounds coords
+		if (row > boundRow || col > boundCol || row < 0 || col < 0) {
+			return false;
+		}
+
+		if (orientation === "X") {
+			if (col + length > board[0].length) {
+				// Ship goes out of bounds to the right, try placing it in reverse order
+				if (col - length < -1) {
+					return false; // Reverse order is also out of bounds
+				}
+				for (let i = col - 1; i >= col - length; i--) {
+					if (board[row][i] && board[row][i].type === ship.type) {
+						return false; // There is a ship in the way
+					}
+				}
+			} else {
+				// Ship fits within bounds horizontally
+				for (let i = col; i < col + length; i++) {
+					if (board[row][i] && board[row][i].type === ship.type) {
+						return false; // There is a ship in the way
+					}
+				}
+			}
+		} else if (orientation === "Y") {
+			if (row + length > board.length) {
+				// Ship goes out of bounds downwards, try placing it in reverse order
+				if (row - length < -1) {
+					return false; // Reverse order is also out of bounds
+				}
+				for (let i = row - 1; i >= row - length; i--) {
+					if (board[i][col] && board[i][col].type === ship.type) {
+						return false; // There is a ship in the way
+					}
+				}
+			} else {
+				// Ship fits within bounds vertically
+				for (let i = row; i < row + length; i++) {
+					if (board[i][col] && board[i][col].type === ship.type) {
+						return false; // There is a ship in the way
+					}
+				}
+			}
+		} else {
+			console.error("Incorrect orientation: ", orientation, "\n Must be X or Y");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * The function takes in a player and a coordinate array, and returns true if the player hit a ship,
+	 * and false if the player missed
+	 * @param player - the player who is attacking
+	 * @param coords - an array of two numbers, the row and column of the attack
+	 * @returns A boolean value.
+	 */
 	recieveAttack(player, coords) {
 		const {row, col} = {row: coords[0], col: coords[1]};
 		const board = player === this.player ? this.computerBoard : this.playerBoard;

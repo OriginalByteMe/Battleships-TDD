@@ -77,3 +77,20 @@ test("recievingAttack function should not hit the ship if coord's are incorrect"
 	expect(gameboard.recieveAttack(player2, [0,1])).toBe(false);
 });
 
+test("Ship length cannot be larger than 3", () => {
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 5, 5);
+	gameboard.placeShip(player, "X", 4, [0,0]);
+	expect(gameboard.playerBoard[0][0]).toEqual(new Ship(3, "X"));
+	expect(gameboard.playerBoard[0][1]).toEqual(new Ship(3, "X"));
+	expect(gameboard.playerBoard[0][2]).toEqual(new Ship(3, "X"));
+});
+
+test("Ship length cannot be smaller than 1", () => {
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 1, 1);
+	gameboard.placeShip(player, "X", -1, [0,0]);
+	expect(gameboard.playerBoard[0][0]).toEqual(new Ship(1, "X"));	
+});

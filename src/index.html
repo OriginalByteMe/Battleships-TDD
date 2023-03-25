@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noah's TDD Batleship game</title>
+  <script src="./index.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Battleship Game</h1>
+    </header>
+    <form action="gameboard.html" method="get" id="game-size-form">
+      <label for="player-name">Enter your name:</label>
+      <input type="string" id="player-name" name="player-name" required>
+      <label for="game-size">Enter the size of the gameboard:</label>
+      <input type="number" id="game-size" name="game-size" min="5" max="15" required>
+      <button type="submit">Start Game</button>
+    </form>
+    <div id="gameboard" style="display:none;">
+      <header>
+        <h1>Noah's TDD Battleship Game</h1>
+      </header>
+      <main>
+        <section class="player game-board">
+          <h2>Your Board</h2>
+          <div class="player board"></div>
+          <p>Click on the board to place your ships.</p>
+        </section>
+        <section class="computer game-board">
+          <h2>Enemy Board</h2>
+          <div class="computer board"></div>
+          <p>Click on the enemy board to attack.</p>
+        </section>
+      </main>
+      <footer>
+        <button id="start-game">Start Game</button>
+        <button id="reset-game">Reset Game</button>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
