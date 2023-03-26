@@ -57,9 +57,7 @@ export default function DOMHandler( player, size) {
 						// Add a mouseover event listener to the cell
 						cell.addEventListener("mouseover", handleMouseOver);
 					}
-					
 					rowDiv.appendChild(cell);
-					
 				}
 				grid.appendChild(rowDiv);
 			}
@@ -112,7 +110,6 @@ export default function DOMHandler( player, size) {
 				}
 				
 				selectedCells = [];
-				updatePlayerGrid();
 			}
 		}
 		
@@ -175,9 +172,9 @@ export default function DOMHandler( player, size) {
 				const ship = gameboard.playerBoard[row][col];
 				
 				if (ship) {
-					if (gameboard.playerHit.includes(row, col)) {
+					if (gameboard.computerHit.includes(row, col)) {
 						cell.classList.add("hit");
-					} else if (gameboard.playerMiss.includes(row, col)) {
+					} else if (gameboard.computerMiss.includes(row, col)) {
 						cell.classList.add("miss");
 					}
 				} else {
@@ -187,14 +184,6 @@ export default function DOMHandler( player, size) {
 				}
 			}
 		}
-		const boardData = gameboard.playerBoard.map(obj => {
-			if (Object.keys(obj).length === 0) {
-				return {length: 0, orientation: "none", damage: 0, type: "none"};
-			} else {
-				return obj;
-			}
-		});
-		console.table(boardData);
 	}
 
 	function updateEnemyGrid() {
@@ -228,10 +217,10 @@ export default function DOMHandler( player, size) {
 
 			// Change the background color of the cell based on whether the attack was a hit or a miss
 			if (hit) {
-				cell.style.backgroundColor = "red";
+				cell.classList.add("hit");
 				updateEnemyGrid();
 			} else {
-				cell.style.backgroundColor = "blue";
+				cell.classList.add("miss");
 				updateEnemyGrid();
 			}
 

@@ -51,7 +51,7 @@ class Computer extends Player {
 		} while (this.previousShots.some(coords => coords[0] === x && coords[1] === y) || this.avoidCoordinates.some(coords => coords[0] === x && coords[1] === y));
 
 		const hit = this.gameBoard.recieveAttack("Computer", [x, y]);
-		this.previousShots.push(x,y);
+		this.previousShots.push([x,y]);
 
 		if (hit) {
 			this.avoidCoordinates = this.avoidCoordinates.concat(this.gameBoard.computerHit); // Add hit coordinates to avoid list

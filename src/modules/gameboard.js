@@ -55,9 +55,7 @@ class Gameboard {
 					if (board[row][i] && board[row][i].type === ship.type) {
 						return false; // There is a ship in the way
 					}
-					console.log("Old ship pos",board[row][i]);
 					board[row][i] = ship;
-					console.log("New ship pos",board[row][i]);
 				}
 			} else {
 				// Ship fits within bounds horizontally
@@ -172,6 +170,7 @@ class Gameboard {
 		const board = player === this.player ? this.computerBoard : this.playerBoard;
 		const ship = board[row][col];
 		if (ship && ship.type === "Ship") {
+			ship.hit();
 			if (ship.isSunk()) {
 				if (player === this.player) {
 					this.playerScore += 1;
@@ -180,15 +179,14 @@ class Gameboard {
 					this.computerScore += 1;
 					this.computerHit.push(coords);
 				}
-				return true;
 			} else {
 				if (player === this.player) {
 					this.playerHit.push(coords);
 				} else {
 					this.computerHit.push(coords);
 				}
-				return true;
 			}
+			return true;
 		} else {
 			if (player === this.player) {
 				this.playerMiss.push(coords);
@@ -200,9 +198,15 @@ class Gameboard {
 	}
 
 	getWinner() {
-		if (this.playerScore === this.computerShips.length) return this.player;
-		if (this.computerScore === this.playerShips.length) return this.computer;
-		return false;
+		if (this.computerShips.length === 0 || this.playerShips.length === 0) return false;
+		// If all ships are sunk, return the winner
+		if (this.computerShips.every(ship => ship.isSunk())) {
+			return this.player;
+		} else if (this.playerShips.every(ship => ship.isSunk())) {
+			return this.computer;
+		} else {
+			return false;
+		}
 	}
 
 	get playerBoard() {
