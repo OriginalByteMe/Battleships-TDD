@@ -139,3 +139,64 @@ test("Valid placement function should correctly identify valid placement", () =>
 	expect(gameboard.isValidPlacement(player, "X", 1, [3,0])).toBe(false);
 	expect(gameboard.isValidPlacement(player, "X", 1, [0,1])).toBe(true);
 });
+
+test("If there is no winner, gameboard should return falser", () => {
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 3, 3);
+	gameboard.placeShip(player, "X", 1, [0,0]);
+	gameboard.placeShip(player2, "X", 1, [0,1]);
+	expect(gameboard.getWinner()).toBe(false);
+});
+
+test("If all enemy ships are hit, gameboard should return player as winner", () => {
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 3, 3);
+	gameboard.placeShip(player, "X", 1, [0,0]);
+	gameboard.placeShip(player, "X", 1, [1,0]);
+	gameboard.placeShip(player, "X", 1, [2,0]);
+	gameboard.placeShip(player2, "X", 1, [0,1]);
+	gameboard.placeShip(player2, "X", 1, [1,1]);
+	gameboard.placeShip(player2, "X", 1, [2,1]);
+	gameboard.recieveAttack(player, [0,1]);
+	gameboard.recieveAttack(player, [1,1]);
+	gameboard.recieveAttack(player, [2,1]);
+	expect(gameboard.getWinner()).toBe(player);
+});
+
+test("If all player ships are hit, gameboard should return enemy as winner", () => {
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 3, 3);
+	gameboard.placeShip(player, "X", 1, [0,0]);
+	gameboard.placeShip(player, "X", 1, [1,0]);
+	gameboard.placeShip(player, "X", 1, [2,0]);
+	gameboard.placeShip(player2, "X", 1, [0,1]);
+	gameboard.placeShip(player2, "X", 1, [1,1]);
+	gameboard.placeShip(player2, "X", 1, [2,1]);
+	gameboard.recieveAttack(player2, [0,0]);
+	gameboard.recieveAttack(player2, [1,0]);
+	gameboard.recieveAttack(player2, [2,0]);
+	expect(gameboard.getWinner()).toBe(player2);
+});
+
+test("If player sinks ship, score should increment", () => { 
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 3, 3);
+	gameboard.placeShip(player, "X", 1, [0,0]);
+	gameboard.placeShip(player2, "X", 1, [0,1]);
+	gameboard.recieveAttack(player, [0,1]);
+	expect(gameboard.playerScore).toBe(1);
+});
+
+test("If enemy sinks ship, score should increment", () => {
+	const player = "player";
+	const player2 = "player2";
+	const gameboard = new Gameboard(player, player2, 3, 3);
+	gameboard.placeShip(player, "X", 1, [0,0]);
+	gameboard.placeShip(player2, "X", 1, [0,1]);
+	gameboard.recieveAttack(player2, [0,0]);
+	expect(gameboard.computerScore).toBe(1);
+});
